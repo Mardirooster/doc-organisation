@@ -23,6 +23,9 @@ from tqdm import tqdm
 def compute_hashes(files, hashfunc=imagehash.whash):
     hashes = []
     fnames = []
+    width = os.get_terminal_size().columns
+    print("\n")
+    print("####### - HASHING - #######".center(width))
     for f in tqdm(files):
 
         image = Image.open(f)
@@ -38,7 +41,7 @@ def compute_hashes(files, hashfunc=imagehash.whash):
 def compute_dists(hashes):
     # precompute distance matrix
     mat = np.zeros((len(hashes), len(hashes)))
-    for i, j in combinations(range(len(hashes)), 2):
+    for i, j in tqdm(combinations(range(len(hashes)), 2)):
         dist = hashes[i] - hashes[j]
         mat[i, j] = mat[j,i] = dist
     return mat
@@ -53,8 +56,10 @@ def cluster(mat, fnames, eps, min_samples, metric='precomputed'):
 
 
 def show_clusters(clusters):
+    width = os.get_terminal_size().columns
+    print("\n\n\t-----------------------------","\n\t  total\t\t:\t",len(fnames),"\n\t-----------------------------")
     for i,cluster in clusters.items():
-        print("unsorted:\t" if i < 0 else i, "" if i < 0 else "\t:", "\t", len(cluster))
+        print("\t","unsorted\t:" if i < 0 else i, "" if i < 0 else "\t\t:", "\t", len(cluster))
         count = 0
         for f in cluster:
             image = cv2.imread(f)
@@ -101,7 +106,7 @@ if __name__ == '__main__':
         if args.length:
             files = files[:args.length]
 
-        fnames, hashes = compute_hashes(list(map(lambda x: os.path.join(image_dir, x), files)), imagehash.phash)  #, imagehash.dhash)
+        fnames, hashes = compute_hashes(list(map(lambda x: os.path.join(image_dir, x), files)), imagehash.whash)  #, imagehash.dhash)
 
         if args.writefile:
             with open(args.writefile, 'wb') as f:
@@ -113,7 +118,7 @@ if __name__ == '__main__':
             # print(list(map(str,(hashes))))
 
 
-    print("-----------------------","\n total\t:\t",len(fnames),"\n-----------------------")
+    
     hash_dict = dict(zip(fnames,hashes))
     mat = compute_dists(hashes)
 
@@ -122,7 +127,7 @@ if __name__ == '__main__':
     #   CLUSTERING BIT: change eps and min_samples to change clustering
     #
     # works pretty well with whash
-    clusters = cluster(mat, fnames, eps=9, min_samples=10)
+    clusters = cluster(mat, fnames, eps=7, min_samples=10)
 
     unsorted = [hash_dict[x] for x in clusters[-1]]
 
