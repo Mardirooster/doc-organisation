@@ -5,6 +5,8 @@ from os.path import isfile, join
 import csv
 import pickle
 from itertools import combinations
+from functools import reduce
+import operator
 
 import cv2
 import numpy as np
@@ -29,7 +31,11 @@ def compute_hashes(files, hashfunc=imagehash.whash):
     for f in tqdm(files):
 
         image = Image.open(f)
-        hash = hashfunc(image)
+        try:
+            hash = hashfunc(image)
+        except OSError as err:
+            print(err, " ", f)
+            pass
         hashes.append(hash)
         fnames.append(f)
 
@@ -91,36 +97,58 @@ if __name__ == '__main__':
 
     #image_dir = "C:\\proj\\docsort\\images"
 
-    image_dir = "C:\\Unnamed\\dir0\\pngs"
+    hash_file_list = []
+
+    #image_dir = "C:\\Unnamed\\dir0\\pngs"
+    image_dir = "C:\\Unnamed\\dir1\\pngs"
+    temp_mat = "temp.txt"
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-w", "--writefile", help="hash file name to write to, default hashes.csv")
     parser.add_argument("-r", "--readfile", help="hash file name to read from")
     parser.add_argument("-l", "--length", help="number of images to load", type=int)
+    parser.add_argument("-t", "--temp")
+    parser.add_argument('--readfiles', nargs='+')
+
     args = parser.parse_args()
 
+    if not args.temp:
+        if not args.readfiles:
 
-    # either calculate hashes or read from file
-    if not args.readfile:
-        files = [f for f in listdir(image_dir) if f.endswith(".png")]
-        if args.length:
-            files = files[:args.length]
+            # either calculate hashes or read from file
+            if not args.readfile:
+                files = [f for f in listdir(image_dir) if f.endswith(".png")]
+                if args.length:
+                    files = files[:args.length]
 
-        fnames, hashes = compute_hashes(list(map(lambda x: os.path.join(image_dir, x), files)), imagehash.whash)  #, imagehash.dhash)
+                fnames, hashes = compute_hashes(list(map(lambda x: os.path.join(image_dir, x), files)), imagehash.dhash)  #, imagehash.dhash)
 
-        if args.writefile:
-            with open(args.writefile, 'wb') as f:
-                pickle.dump(zip(fnames,hashes), f, -1)
-        
+                if args.writefile:
+                    with open(args.writefile, 'wb') as f:
+                        pickle.dump(zip(fnames,hashes), f, -1)
+                
+            else:
+                with open(args.readfile, 'rb') as f:
+                    (fnames, hashes) = map(list,(zip(*pickle.load(f))))
+                    # print(list(map(str,(hashes))))
+
+        else:
+            all_files = []
+            for filename in args.readfiles:
+                with open(filename, 'rb') as file:
+                    all_files.append(map(list, (zip(*pickle.load(file)))))
+
+
+            (fnames, hashes) = map(lambda x: reduce(operator.add, x), zip(*all_files))
+
+
+        hash_dict = dict(zip(fnames,hashes))
+        mat = compute_dists(hashes)
+        with open(temp_mat, 'wb') as f:
+            pickle.dump(mat, f, -1)
     else:
-        with open(args.readfile, 'rb') as f:
-            (fnames, hashes) = map(list,(zip(*pickle.load(f))))
-            # print(list(map(str,(hashes))))
-
-
-    
-    hash_dict = dict(zip(fnames,hashes))
-    mat = compute_dists(hashes)
+        with open(temp_mat, 'rb') as file:
+            mat = pickle.load(file)
 
 
     #
