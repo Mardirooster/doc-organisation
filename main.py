@@ -31,11 +31,11 @@ def compute_hashes(files, hashfunc, hashfuncname="HASHING"):
     for f in tqdm(files):
 
         image = Image.open(f)
-#        try:
-        hash = hashfunc(image)
-        # except OSError as err:
-        #     print(err, " ", f)
-        #     pass
+        try:
+            hash = hashfunc(image)
+        except OSError as err:
+            print(err, " ", f)
+            pass
         hashes.append(hash)
         fnames.append(f)
 
@@ -61,7 +61,7 @@ def cluster(mat, fnames, eps, min_samples, metric='precomputed'):
     return clusters
 
 
-def show_clusters(clusters):
+def show_clusters(clusters, fnames):
     width = os.get_terminal_size().columns
     print("\n\n\t-----------------------------","\n\t  total\t\t:\t",len(fnames),"\n\t-----------------------------")
     ordered_cluster = {}
@@ -70,7 +70,7 @@ def show_clusters(clusters):
         count = 0
         for f in cluster:
             image = cv2.imread(f.replace("pngs","pngs-small",1))
-            small = cv2.resize(image, (0,0), fx=0.5, fy=0.5) 
+            small = cv2.resize(image, (0,0), fx=0.2, fy=0.2) 
             cv2.imshow(f,small)
             count += 1
             if count%20 == 0:
@@ -83,6 +83,7 @@ def show_clusters(clusters):
         if q == 32:
             break
         cv2.destroyAllWindows()
+    cv2.destroyAllWindows()
 
 def main(writefile=None,readfile=None,length=None,temp=None,temp_mat="temp.txt",readfiles=None,image_dir="C:\\Unnamed\\dir1\\pngs",):
     if temp is None:
@@ -129,7 +130,7 @@ def main(writefile=None,readfile=None,length=None,temp=None,temp_mat="temp.txt",
     #
     # works pretty well with whash
     clusters = cluster(mat, fnames, eps=7, min_samples=10)
-
+    show_clusters(clusters, fnames)
     #unsorted = [hash_dict[x] for x in clusters[-1]]
 
     #mat = compute_dists(unsorted)

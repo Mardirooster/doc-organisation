@@ -28,16 +28,16 @@ def compute_hashes(files, hashfunc, hashfuncname="HASHING"):
 
 
 base_dir = "C:\\Unnamed\\"
-pngs_dir = "pngs-small"
+pngs_dir = "pngs-medium"
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 output_dir = os.path.join(dir_path, "hashes")
 
 
 hash_funcs = {
-    'dhash': imagehash.whash,
+    #'dhash': imagehash.whash,
     'phash': imagehash.phash,
-    'whash': imagehash.whash
+    #'whash': imagehash.whash
     }
 
 
@@ -45,11 +45,11 @@ dirs = ['dir'+str(x) for x in range(29) ]
 png_dirs = list(zip([os.path.join(base_dir, d, pngs_dir) for d in dirs],dirs))
 existing_png_dirs = [(x,y) for (x,y) in png_dirs if os.path.isdir(x)]
 
-logging.basicConfig(format='%(levelname)s:%(message)s', filename='hash_gen.log',  level=logging.DEBUG)
+logging.basicConfig(format='%(levelname)s:%(message)s', filename='hash_gen.log',  level=logging.ERROR)
 
 for png_d,d in existing_png_dirs:
     for hash_name, hash_func in hash_funcs.items():
-        out_file_name = '_'.join([d,pngs_dir.split('-')[-1], hash_name])
+        out_file_name = '.'.join(['_'.join([d,pngs_dir.split('-')[-1], hash_name]), 'hash'])
         out_file = os.path.join(output_dir, out_file_name)
 
         if not os.path.exists(out_file):

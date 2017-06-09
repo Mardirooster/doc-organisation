@@ -4,5 +4,6 @@ docsort.sublime-project
 docsort.sublime-workspace
 _*.*
 /hashes/
+/test/
 /__pycache__/
 temp.txt
