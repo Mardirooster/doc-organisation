@@ -1,7 +1,5 @@
-from wand.image import Image
-from wand.display import display
 import os
-import shutil
+import shutil as s
 
 
 
@@ -9,18 +7,25 @@ dir_path = "C:\\Unnamed\\"
 
 dirs = [os.path.join(dir_path,'dir'+str(x)) for x in range(0,28)]
 
-mov_dir = 'unsorted-cat'
-
-for d in dirs:
-	if not os.path.isdir(os.path.join(d,mov_dir)):
-		os.mkdir(os.path.join(d,mov_dir))
-
-	unsorted_dirs = [os.path.join(d,o) for o in os.listdir(d) if os.path.isdir(os.path.join(d,o)) and o.replace('-','1').isdigit()]
-	for ud in unsorted_dirs:
-		shutil.copytree(ud, os.path.join(d,mov_dir,ud.split('\\')[-1]))
-		shutil.rmtree(ud)
+pdf_dirs = [os.path.join(d, 'pdfs') for d in dirs if os.path.isdir(os.path.join(d, 'pdfs'))]
 
 
+
+for pdf_dir in pdf_dirs:
+	ocr_files = [os.path.join(pdf_dir, f) for f in os.listdir(pdf_dir) if f.endswith('-ocr.pdf')]
+
+	if(ocr_files and not os.path.isdir(pdf_dir.replace('pdfs','ocr-pdfs',1))):
+		os.mkdir(pdf_dir.replace('pdfs','ocr-pdfs',1))
+	for ocr_file in ocr_files:
+		base_file = '.'.join([ocr_file.rsplit('-',1)[0],'pdf'])
+
+		print(base_file)
+		try:
+			s.move(base_file,base_file.replace('pdfs','ocr-pdfs',1))
+			s.move(ocr_file,ocr_file.replace('pdfs','ocr-pdfs',1))
+		except s.Error as err:
+			print(err)
+			pass
 
 
 
