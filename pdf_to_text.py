@@ -4,7 +4,7 @@ import re
 
 
 base_path = 'C:\\Unnamed\\'
-dirs = [os.path.join(base_path, 'dir'+str(x)) for x in range(29) ][1:28]
+dirs = [os.path.join(base_path, 'dir'+str(x)) for x in range(29) ][1:29]
 seps = [r'\.', r'\\', r'-',r'/',r' ']
 sep = r'[\.\-/ ]'
 date = [r'\b(((0[13578]|(10|12))', r'(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)', 
@@ -42,12 +42,18 @@ for d in dirs:
 
         
         for f in files:
-            with open(f, 'r', encoding="utf8") as file:
+            try:
                 try:
-                    lines = file.readlines()
+                    with open(f, 'r', encoding="utf8") as file:
+                        lines = file.readlines()
                 except UnicodeDecodeError as err:
-                    print(err)
-                    pass
+                    with open(f, 'r') as file:
+                        lines = file.readlines()
+                        print(err)
+                        pass
+            except:
+                print(err)
+                pass
                 
             matches = []
             

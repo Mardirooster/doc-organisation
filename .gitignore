@@ -1,5 +1,6 @@
 *.png
 *.whl
+*.csv
 docsort.sublime-project
 docsort.sublime-workspace
 _*.*

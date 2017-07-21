@@ -35,4 +35,6 @@ ordered_d = OrderedDict(sorted(clusters.viewitems(), key=lambda x: len(x[1])))
 ordered_d = dict(sorted(clusters.items(), key = lambda item : len(item[1]), reverse=true))
 
 
-convert -density 800 "Embedding 1_1170.pdf"[3] -resize x4400 -crop 800x400+400+800 -quality 100 "out/out.png"
+convert -density 1000 "Embedding 1_1181.pdf"[3] -resize x4400 -crop 600x400+1050+850 -quality 100 "out/out.png"
+
+convert -density 1000 "Embedding 1_1172.pdf"[2] -resize x4400 -crop 600x400+1050+850 -quality 100 "Embedding 1_1172.png"

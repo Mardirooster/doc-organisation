@@ -5,7 +5,7 @@ import shutil as s
 
 dir_path = "C:\\Unnamed\\"
 
-dirs = [os.path.join(dir_path,'dir'+str(x)) for x in range(0,28)]
+dirs = [os.path.join(dir_path,'dir'+str(x)) for x in range(0,29)]
 
 pdf_dirs = [os.path.join(d, 'pdfs') for d in dirs if os.path.isdir(os.path.join(d, 'pdfs'))]
 
