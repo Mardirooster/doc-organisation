@@ -41,7 +41,7 @@ hash_funcs = {
     }
 
 
-dirs = ['dir'+str(x) for x in range(29) ]
+dirs = ['dir'+str(x) for x in range(29) ][20:]
 png_dirs = list(zip([os.path.join(base_dir, d, pngs_dir) for d in dirs],dirs))
 existing_png_dirs = [(x,y) for (x,y) in png_dirs if os.path.isdir(x)]
 
@@ -55,6 +55,7 @@ for png_d,d in existing_png_dirs:
         if not os.path.exists(out_file):
             files = [os.path.join(png_d, f) for f in os.listdir(png_d) if f.endswith(".png")]
             try:
+                print("dir: " + d)
                 fnames, hashes = compute_hashes(files, hash_func, hash_name)
                 with open(out_file, 'wb') as f:
                     pickle.dump(zip(fnames,hashes), f, -1)

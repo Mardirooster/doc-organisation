@@ -40,6 +40,7 @@ if __name__ == '__main__':
         mat_filename = os.path.join(hash_dir, '.'.join(['_'.join([directory,size,hashtype]), 'mat']))
 
         if not os.path.exists(mat_filename):
+            print(filename)
             with open(filename, 'rb') as f:
                 (fnames, hashes) = map(list,(zip(*pickle.load(f))))
 

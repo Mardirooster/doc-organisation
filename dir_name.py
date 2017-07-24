@@ -36,7 +36,7 @@ def show_clusters(directory):
 
 
 path = "C:\\Unnamed\\"
-dirs = [os.path.join(path, 'dir'+str(x)) for x in range(29)][4:]
+dirs = [os.path.join(path, 'dir'+str(x)) for x in range(29)][25:]
 print(dirs)
 for d in dirs:
     show_clusters(d)

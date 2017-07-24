@@ -141720,3 +141720,5 @@ DEBUG:STREAM b'tIME' 136 7
 DEBUG:b'tIME' 136 7 (unknown)
 DEBUG:STREAM b'IDAT' 155 9268
 ERROR:image file is truncated ... C:\Unnamed\dir4\pngs-medium\Embedding 1_13200-6.png
+ERROR:image file is truncated ... C:\Unnamed\dir4\pngs-medium\Embedding 1_13200-6.png
+ERROR:image file is truncated ... C:\Unnamed\dir4\pngs-medium\Embedding 1_13200-6.png
