@@ -49,6 +49,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 hash_dir = os.path.join(dir_path, "hashes")
 
 matfiles = [os.path.join(hash_dir, f) for f in os.listdir(hash_dir) if f.endswith(".mat")]
+matfiles = ['C:\\proj\\docsort\\hashes\\dir27_medium_phash.mat']
 
 details = [(f,) + tuple(f.split('\\')[-1].split('.')[0].split('_')) for f in matfiles if hash_algo in f]
 print(details)

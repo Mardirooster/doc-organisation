@@ -30,6 +30,7 @@ hash_dir = os.path.join(dir_path, "hashes")
 
 
 hashfiles = [os.path.join(hash_dir, f) for f in os.listdir(hash_dir) if f.endswith(".hash")]
+hashfiles = ['C:\\proj\\docsort\\hashes\\dir28_medium_phash.hash']
 
 details = [(f,) + tuple(f.split('\\')[-1].split('.')[-2].split('_')) for f in hashfiles]
 
